@@ -8,6 +8,9 @@ bash Miniconda3-latest-Linux-x86_64.sh
 # or visit ``https://developer.nvidia.com/cuda-toolkit-archive'' to find specific version
 wget https://developer.download.nvidia.com/compute/cuda/11.3.0/local_installers/cuda_11.3.0_465.19.01_linux.run
 sudo sh cuda_11.3.0_465.19.01_linux.run
+# then run ``ls /usr/local'' to find the path to cuda
+# then run ``PATH=/usr/local/cuda-11.3/bin/:$PATH'' to add it in the environment
+
 
 # install pytorch
 # or visit ``https://download.pytorch.org/whl/torch_stable.html'' to find specific version
