@@ -54,3 +54,26 @@ tar -xzpvf rarlinux-x64-611.tar.gz
 cd rar/
 sudo make
 ```
+
+> git 撤销 commit 操作
+```bash
+git add .
+git commit -m "up"
+# 之后想撤销commit
+git reset --soft HEAD^
+
+# 如果两次commit都想撤回
+git reset --soft HEAD~2
+
+# 不删除工作空间改动代码，撤销commit，并且撤销 git add . 操作
+git reset --mixed HEAD^
+
+# 不删除工作空间改动代码，撤销commit，不撤销git add .
+git reset --soft HEAD^
+
+# 删除工作空间改动代码，撤销commit，撤销git add .
+git reset --hard HEAD^
+
+# 只是想修改注释
+git commit --amend
+```
