@@ -40,6 +40,13 @@ pip install torch==1.10.1+cu111 torchvision==0.11.2+cu111 torchaudio==0.10.1 -f 
 
 ```
 
+安装完可以进入python简单测试一下
+```python
+import torch
+x = torch.randn(4, 4).cuda()
+n_gpus = torch.cuda.device_count()
+```
+
 > git初始化config
 
 ```bash
@@ -76,4 +83,45 @@ git reset --hard HEAD^
 
 # 只是想修改注释
 git commit --amend
+```
+
+> Onedrive文件命令行下载
+
+用F12打开开发人员工具，然后在网页中选中要下载的文件点击下载按钮。 在开发工具network标签下，看到新出现的项目，右击，选择copy cURL (bash)，然后在Linux terminal中粘贴，并在末尾加上--output <文件名> 即可。
+
+> Google Drive 文件下载
+```bash
+# 首先要找到对应文件的ID
+# 比如链接 https://drive.google.com/file/d/1Lq2USoQmbFgCFJlGx3huFSfjqwtxMCL8/view 的ID就是1Lq2USoQmbFgCFJlGx3huFSfjqwtxMCL8
+
+# 小文件 这边的$1 $2 填写对应的内容就行
+ID=$1
+FILENAME=$2
+
+wget --no-check-certificate "https://docs.google.com/uc?export=download&id=$ID" -O $FILENAME
+
+
+# 大文件
+ID=$1
+FILENAME=$2
+wget --load-cookies /tmp/cookies.txt \
+    "https://docs.google.com/uc?export=download&confirm=$(wget \
+    --quiet --save-cookies /tmp/cookies.txt \
+    --keep-session-cookies \
+    --no-check-certificate \
+    "https://docs.google.com/uc?export=download&id=$ID" \
+    -O- | sed -rn "s/.*confirm=([0-9A-Za-z_]+).*/\1\n/p")&id=$ID" \
+    -O $FILENAME && rm -rf /tmp/cookies.txt
+
+# 示例 下载cifar_fs数据集
+ID=1Lq2USoQmbFgCFJlGx3huFSfjqwtxMCL8
+FILENAME=cifar_fs.tar
+wget --load-cookies /tmp/cookies.txt \
+    "https://docs.google.com/uc?export=download&confirm=$(wget \
+    --quiet --save-cookies /tmp/cookies.txt \
+    --keep-session-cookies \
+    --no-check-certificate \
+    "https://docs.google.com/uc?export=download&id=$ID" \
+    -O- | sed -rn "s/.*confirm=([0-9A-Za-z_]+).*/\1\n/p")&id=$ID" \
+    -O $FILENAME && rm -rf /tmp/cookies.txt
 ```
