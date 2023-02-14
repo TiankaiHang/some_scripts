@@ -26,6 +26,13 @@ PATH=/usr/local/cuda-11.3/bin/:$PATH
 
 ```
 
+> 安装cuda-11.7
+```bash
+wget https://developer.download.nvidia.com/compute/cuda/11.7.0/local_installers/cuda_11.7.0_515.43.04_linux.run
+sudo sh cuda_11.7.0_515.43.04_linux.run
+```
+
+
 > PyTorch 安装
 ```bash
 # 先创建一个环境
