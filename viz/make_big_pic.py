@@ -11,8 +11,9 @@ def main():
     M = 9
     N = 16
     resolution = 64
+    suffix = "png"
 
-    total_files = glob.glob(f"{data_dir}/*.jpg")
+    total_files = glob.glob(f"{data_dir}/*.{suffix}")
     total_files = total_files[:(M * N)]
 
     target_img = np.zeros((M * resolution, N * resolution, 3), dtype=np.uint8)
