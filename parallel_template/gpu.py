@@ -1,8 +1,6 @@
 import os
 import torch
-import json
 from tqdm.auto import tqdm
-from PIL import Image
 import pickle
 import torch.distributed as dist
 
@@ -30,6 +28,11 @@ def get_world_size():
 
 def get_rank():
     return torch.distributed.get_rank() if torch.distributed.is_initialized() else 0
+
+
+def print0(*args, **kwargs):
+    if get_rank() == 0:
+        print(*args, **kwargs)
 
 
 def all_gather(data):
@@ -94,26 +97,48 @@ def all_gather(data):
         return resized_list
     else:
         return data_list
+    
+
+def merge_list_of_list(list_of_list):
+    ret = []
+    for l in list_of_list:
+        ret.extend(l)
+    return ret
+
+
+def merge_list_of_dict(list_of_dict):
+    ret = {}
+    for d in list_of_dict:
+        ret.update(d)
+    return ret
+
+
+def merge_results(results):
+    if isinstance(results[0], dict):
+        return merge_list_of_dict(results)
+    elif isinstance(results[0], list):
+        return merge_list_of_list(results)
+    else:
+        raise NotImplementedError
 
 
 def main_worker(sub_ids):
-    for i in tqdm(range(len(sub_ids)), disable=get_rank() > 0):
+    for _ in tqdm(range(len(sub_ids)), disable=get_rank() > 0):
         pass
 
-    return sub_ids
+    # return sub_ids
+    return {i: i for i in sub_ids}
 
 
 def main():
-    print('Launching processes...')
     torch.multiprocessing.set_start_method('spawn')
     dist_init()
 
     all_ids = list(range(100))
     sub_ids = all_ids[get_rank()::get_world_size()]
     ret = main_worker(sub_ids)
-    print(ret)
     ret = all_gather(ret)
-    print(ret)
+    print0(merge_results(ret))
     
 
 if __name__ == "__main__":
