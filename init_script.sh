@@ -29,3 +29,6 @@ wget https://www.rarlab.com/rar/rarlinux-x64-611.tar.gz
 tar -xzpvf rarlinux-x64-611.tar.gz
 cd rar/
 sudo make
+
+# install ipython
+conda install -c anaconda ipython
