@@ -132,3 +132,17 @@ wget --load-cookies /tmp/cookies.txt \
     -O- | sed -rn "s/.*confirm=([0-9A-Za-z_]+).*/\1\n/p")&id=$ID" \
     -O $FILENAME && rm -rf /tmp/cookies.txt
 ```
+
+> azcopy 安装
+```.bash
+# install azcopy
+if command -v azcopy >/dev/null 2>&1; then
+    echo "azcopy exists"
+else
+    wget https://aka.ms/downloadazcopy-v10-linux --no-check-certificate -O azcopy.tar;
+    mkdir azcopy10 ;
+    tar -xvf azcopy.tar -C azcopy10/;
+    sudo cp azcopy10/*/azcopy /usr/bin/;
+    sudo azcopy --version;
+fi
+```
