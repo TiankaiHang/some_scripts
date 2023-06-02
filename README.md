@@ -16,13 +16,13 @@ sudo sh cuda_11.3.0_465.19.01_linux.run
 ```
 安装完之后`nvcc -V` 看是不是预期版本。
 有可能需要手动添加路径
-```bash
+```.bash
 
 # 看一下都有哪些cuda版本
 ls /usr/local
 
 # 然后把对应的添加到环境变量
-PATH=/usr/local/cuda-11.3/bin/:$PATH
+export PATH=/usr/local/cuda-11.3/bin/:$PATH
 
 ```
 
