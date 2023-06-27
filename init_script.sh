@@ -11,7 +11,6 @@ sudo sh cuda_11.3.0_465.19.01_linux.run
 # then run ``ls /usr/local'' to find the path to cuda
 # then run ``PATH=/usr/local/cuda-11.3/bin/:$PATH'' to add it in the environment
 
-
 # install pytorch
 # or visit ``https://download.pytorch.org/whl/torch_stable.html'' to find specific version
 # e.g., pip install torch==1.10.1+cu111 torchvision==0.11.2+cu111 torchaudio==0.10.1 -f https://download.pytorch.org/whl/torch_stable.html
@@ -19,6 +18,13 @@ conda create -n tiankai python=3.8 -y
 conda activate tiankai
 pip install opencv-python numpy matplotlib
 pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
+
+# install azcopy
+wget https://aka.ms/downloadazcopy-v10-linux --no-check-certificate -O azcopy.tar
+mkdir azcopy10 
+tar -xvf azcopy.tar -C azcopy10/
+sudo cp azcopy10/*/azcopy /usr/bin/
+azcopy --version
 
 # set git config
 git config --global user.name "TiankaiHang"
