@@ -154,3 +154,43 @@ else
     sudo azcopy --version;
 fi
 ```
+
+> download celeba hq
+
+```bash
+curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+sudo apt-get install git-lfs
+git-lfs install
+git clone https://huggingface.co/datasets/huggan/CelebA-HQ
+```
+
+```python
+import os
+import glob
+from tqdm import tqdm
+from PIL import Image
+import pandas as pd
+import io
+
+
+def main():
+    parquet_files = glob.glob("data/train*.parquet")
+    # print(parquet_files)
+
+    save_dir = "processed-train"
+    os.makedirs(save_dir, exist_ok=True)
+
+    idx = 0
+    for parquet_file in tqdm(parquet_files):
+        data = pd.read_parquet(parquet_file)
+        for image, label in zip(data["image"], data["label"]):
+            # import pdb; pdb.set_trace()
+            src_img = Image.open(io.BytesIO(image['bytes'])).convert("RGB")
+            save_path = os.path.join(save_dir, f"{int(idx):06d}.png")
+            src_img.save(save_path)
+            idx += 1
+
+
+if __name__ == "__main__":
+    main()
+```
