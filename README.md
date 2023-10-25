@@ -162,7 +162,9 @@ curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.s
 sudo apt-get install git-lfs
 git-lfs install
 git clone https://huggingface.co/datasets/huggan/CelebA-HQ
+cd CelebA-HQ
 ```
+`vim x.py` as below, then `python x.py`
 
 ```python
 import os
