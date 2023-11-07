@@ -8,6 +8,13 @@ ln -s -f .tmux/.tmux.conf
 cp .tmux/.tmux.conf.local .
 ```
 
+> `opencv` 报错
+
+```bash
+# ImportError: libGL.so.1: cannot open shared object file: No such file or directory
+sudo apt install libgl1-mesa-glx
+```
+
 > 安装Anaconda
 
 ```bash
