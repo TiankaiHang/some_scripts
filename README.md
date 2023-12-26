@@ -203,3 +203,21 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+
+> python 自动排版
+
+1. **Black** - Black 是一个无情的 Python 代码格式化程序，它采取了一个样式指南，并自动重新格式化您的代码以与该样式保持一致。
+   - 安装：`pip install black`
+   - 使用：在命令行中运行 `black your_script.py`
+
+2. **autopep8** - autopep8 会自动格式化 Python 代码以符合 PEP 8 风格指南。
+   - 安装：`pip install autopep8`
+   - 使用：在命令行中运行 `autopep8 --in-place --aggressive --aggressive your_script.py`
+
+3. **YAPF (Yet Another Python Formatter)** - YAPF 由 Google 开发，它会重写你的 Python 程序，以形成最佳的排版格式，与 Black 类似。
+   - 安装：`pip install yapf`
+   - 使用：在命令行中运行 `yapf --in-place your_script.py`
+
+4. **isort** - isort 对 Python 的 import 语句进行排序和分类，它可以与以上的格式化工具配合使用。
+   - 安装：`pip install isort`
+   - 使用：在命令行中运行 `isort your_script.py`
