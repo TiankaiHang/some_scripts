@@ -23,12 +23,10 @@ def generate_shard(oname, dataset, inds, prefix=""):
             sample["__key__"] = uuid.uuid4().hex
 
             for key in sample:
-                if isinstance(sample[key], bytes):
+                if isinstance(sample[key], (bytes, str)):
                     continue
-                elif isinstance(sample[key], str):
-                    sample[key] = sample[key].encode('utf-8')
                 else:
-                    sample[key] = str(sample[key]).encode('utf-8')
+                    sample[key] = str(sample[key])
             
             output.write(sample)
             if idx % 1000 == 0:
