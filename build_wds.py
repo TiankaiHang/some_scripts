@@ -9,6 +9,11 @@ import webdataset as wds
 import uuid
 
 
+def my_handler(obj):
+    # return obj.encode("utf-8") if isinstance(obj, str) else obj
+    return str(obj).encode("utf-8") if isinstance(obj, bool) else obj
+
+
 def generate_shard(oname, dataset, inds, prefix=""):
     """Generate a shard of samples with text.
 
@@ -16,7 +21,7 @@ def generate_shard(oname, dataset, inds, prefix=""):
     That is, the individual text files are compressed automatically on write.
     They will be automatically decompressed when read.
     """
-    with wds.TarWriter(oname) as output:
+    with wds.TarWriter(oname, handlers={"are_different": my_handler}) as output:
         for idx in inds:
             sample = dataset[idx]
             sample["__key__"] = uuid.uuid4().hex
