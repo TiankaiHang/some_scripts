@@ -19,6 +19,7 @@ def generate_shard(oname, dataset, inds, prefix=""):
     with wds.TarWriter(oname) as output:
         for idx in inds:
             sample = dataset[idx]
+            sample["__key__"] = uuid.uuid4().hex
             output.write(sample)
             if idx % 1000 == 0:
                 print(f"{idx:09d} {prefix}:", sample["caption"][:40])
