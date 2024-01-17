@@ -149,7 +149,9 @@ def center_crop(width: int, height: int, img: np.ndarray) -> np.ndarray:
 
 @cli.command()
 def test_wds():
-    train_data: list[str]
+    train_data: list[str] = [
+        "/mnt/external/datasets/pickapic_v2_webdataset/train_00000.tar"
+    ]
     batch_size: int = 32
     resolution: int = 256
     workers: int = 3
