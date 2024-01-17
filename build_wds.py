@@ -15,16 +15,16 @@ def my_handler(obj):
 
 
 def generate_shard(oname, dataset, inds, prefix=""):
-    """Generate a shard of samples with text.
-
-    Each sample has a "__key__" field and a "txt.gz" field.
-    That is, the individual text files are compressed automatically on write.
-    They will be automatically decompressed when read.
+    """Generate a shard of samples.
     """
-    with wds.TarWriter(oname, handlers={"are_different": my_handler}) as output:
+    with wds.TarWriter(oname) as output:
         for idx in inds:
             sample = dataset[idx]
             sample["__key__"] = uuid.uuid4().hex
+
+            if "are_different" in sample:
+                sample["are_different"] = int(sample["are_different"])
+
             output.write(sample)
             if idx % 1000 == 0:
                 print(f"{idx:09d} {prefix}:", sample["caption"][:40])
