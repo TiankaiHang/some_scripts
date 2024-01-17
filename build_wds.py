@@ -22,9 +22,14 @@ def generate_shard(oname, dataset, inds, prefix=""):
             sample = dataset[idx]
             sample["__key__"] = uuid.uuid4().hex
 
-            if "are_different" in sample:
-                sample["are_different"] = int(sample["are_different"])
-
+            for key in sample:
+                if isinstance(sample[key], bytes):
+                    continue
+                elif isinstance(sample[key], str):
+                    sample[key] = sample[key].encode('utf-8')
+                else:
+                    sample[key] = str(sample[key]).encode('utf-8')
+            
             output.write(sample)
             if idx % 1000 == 0:
                 print(f"{idx:09d} {prefix}:", sample["caption"][:40])
