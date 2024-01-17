@@ -1,6 +1,14 @@
 # 一些常用命令
 
-> `.tmux` 使用
+## diffusers
+
+### diable tqdm in pipeline
+
+```bash
+pipeline.set_progress_bar_config(disable=True)
+```
+
+## `.tmux` 使用
 ```bash
 cd
 git clone https://github.com/gpakosz/.tmux.git
@@ -8,14 +16,14 @@ ln -s -f .tmux/.tmux.conf
 cp .tmux/.tmux.conf.local .
 ```
 
-> `opencv` 报错
+## `opencv` 报错
 
 ```bash
 # ImportError: libGL.so.1: cannot open shared object file: No such file or directory
 sudo apt install libgl1-mesa-glx
 ```
 
-> 安装Anaconda
+## 安装Anaconda
 
 ```bash
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
@@ -23,7 +31,7 @@ bash Miniconda3-latest-Linux-x86_64.sh
 
 ```
 
-> 安装cuda-11.3
+## 安装cuda-11.3
 ```bash
 # 或者访问 https://developer.nvidia.com/cuda-toolkit-archive 查找对应的版本
 wget https://developer.download.nvidia.com/compute/cuda/11.3.0/local_installers/cuda_11.3.0_465.19.01_linux.run
