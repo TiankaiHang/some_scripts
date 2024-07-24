@@ -131,7 +131,7 @@ def main_worker(sub_ids):
 
 
 def main():
-    torch.multiprocessing.set_start_method('spawn')
+    # torch.multiprocessing.set_start_method('spawn')
     dist_init()
 
     all_ids = list(range(100))
