@@ -35,6 +35,33 @@ def print0(*args, **kwargs):
         print(*args, **kwargs)
 
 
+def flatten_part(dict_of_tensor):
+    keys = list(dict_of_tensor.keys())
+    shapes = []
+    tensor_list = []
+    for key in keys:
+        shape = dict_of_tensor[key].size()
+        shapes.append(shape)
+        tensor_list.append(dict_of_tensor[key].view(-1))
+    return keys, shapes, torch.cat(tensor_list, dim=0)
+
+
+def debug_tensor(tensor):
+    print0(f"---------------------------------------------")
+    print0(tensor.shape)
+    print0(f"---------------------------------------------")
+
+
+def unflatten_part(keys, shapes, tensor):
+    result = {}
+    start = 0
+    for i, key in enumerate(keys):
+        end = start + shapes[i][0] * int(torch.prod(torch.tensor(shapes[i][1:])))
+        result[key] = tensor[start:end].view(shapes[i])
+        start = end
+    return result
+
+
 def all_gather(data):
     """
     Run all_gather on arbitrary picklable data (not necessarily tensors)
@@ -46,6 +73,16 @@ def all_gather(data):
     world_size = get_world_size()
     if world_size == 1:
         return [data]
+
+    if isinstance(data, dict):
+        keys, shapes, tensor = flatten_part(data)
+        keys_list   = all_gather(keys)
+        shapes_list = all_gather(shapes)
+        tensor_list = all_gather(tensor)
+        keys   = merge_list_of_list(keys_list)
+        shapes = merge_list_of_list(shapes_list)
+        result = unflatten_part(keys, shapes, torch.cat(tensor_list, dim=0))
+        return result
 
     # serialized to a Tensor
     origin_size = None
@@ -134,11 +171,23 @@ def main():
     # torch.multiprocessing.set_start_method('spawn')
     dist_init()
 
-    all_ids = list(range(100))
-    sub_ids = all_ids[get_rank()::get_world_size()]
-    ret = main_worker(sub_ids)
-    ret = all_gather(ret)
-    print0(merge_results(ret))
+    # all_ids = list(range(100))
+    # sub_ids = all_ids[get_rank()::get_world_size()]
+    # ret = main_worker(sub_ids)
+    # ret = all_gather(ret)
+    # print0(merge_results(ret))
+    
+    torch.random.manual_seed(0)
+    torch.cuda.manual_seed_all(0)
+    dict_of_tensor = {
+        f"gpu-{get_rank()}-0": torch.rand(1 + get_rank(), 2 + get_rank()).cuda(),
+        f"gpu-{get_rank()}-1": torch.rand(2 + get_rank(), 1 + get_rank()).cuda(),
+    }
+    if get_rank() == 2:
+        print(f"\n\n{get_rank()} | {dict_of_tensor}")
+    ret = all_gather(dict_of_tensor)
+    if get_rank() == 2:
+        print(f"\n\n{get_rank()} | {ret}")
     
 
 if __name__ == "__main__":
