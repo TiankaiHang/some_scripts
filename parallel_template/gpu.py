@@ -183,11 +183,9 @@ def main():
         f"gpu-{get_rank()}-0": torch.rand(1 + get_rank(), 2 + get_rank()).cuda(),
         f"gpu-{get_rank()}-1": torch.rand(2 + get_rank(), 1 + get_rank()).cuda(),
     }
-    if get_rank() == 2:
-        print(f"\n\n{get_rank()} | {dict_of_tensor}")
     ret = all_gather(dict_of_tensor)
-    if get_rank() == 2:
-        print(f"\n\n{get_rank()} | {ret}")
+    for k, v in dict_of_tensor.items():
+        assert k in ret and torch.allclose(v, ret[k])
     
 
 if __name__ == "__main__":
