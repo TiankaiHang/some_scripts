@@ -1,4 +1,6 @@
 *.png
+downloaded_audio/
+cookies.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

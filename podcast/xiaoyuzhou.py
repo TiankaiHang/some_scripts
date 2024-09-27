@@ -5,6 +5,7 @@ import os
 from urllib.parse import urljoin
 
 import click
+import json
 
 
 @click.group()
@@ -12,15 +13,49 @@ def cli():
     pass
 
 
+def load_cookies_from_file(file_path):
+    cookies = {}
+    try:
+        with open(file_path, 'r') as f:
+            for line in f:
+                if '=' in line:
+                    name, value = line.strip().split('=', 1)
+                    cookies[name] = value
+        return cookies
+    except FileNotFoundError:
+        print(f"Cookie file not found: {file_path}")
+        return None
+    except Exception as e:
+        print(f"Error loading cookies from file: {e}")
+        return None
+
+
 @cli.command()
 @click.option("--url", required=True, help="URL of the webpage containing audio links")
 @click.option("--output_path", default="downloaded_audio", help="Output directory for downloaded audio files")
-def download_audio(url, output_path="downloaded_audio"):
+@click.option("--cookies_file", help="Path to JSON file containing cookies")
+def download_audio(url, output_path="downloaded_audio", cookies_file=None):
 
     os.makedirs(output_path, exist_ok=True)
 
+    # Load cookies from file if provided
+    cookies = load_cookies_from_file(cookies_file) if cookies_file else None
+
+    # Set up headers
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+
     # Send a GET request to the target webpage
-    response = requests.get(url)
+    try:
+        response = requests.get(url, cookies=cookies, headers=headers)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print(f"Error accessing the webpage: {e}")
+        return
+
+    # Send a GET request to the target webpage
+    # response = requests.get(url, cookies=cookies)
     soup = BeautifulSoup(response.content, 'html.parser')
 
     # Define common audio file extensions
@@ -29,7 +64,6 @@ def download_audio(url, output_path="downloaded_audio"):
     # Find all links
     links = soup.find_all('a', href=True)
     audio_links = set()  # Use a set to avoid duplicates
-
     for link in links:
         href = link['href']
         if href.lower().endswith(audio_extensions):
@@ -60,7 +94,7 @@ def download_audio(url, output_path="downloaded_audio"):
         
         # Download audio file
         try:
-            audio_response = requests.get(audio_url, stream=True)
+            audio_response = requests.get(audio_url, stream=True, cookies=cookies)
             audio_response.raise_for_status()
             
             with open(file_path, 'wb') as f:
@@ -80,7 +114,7 @@ def transcribe(audio_path):
     import whisper
     model = whisper.load_model("large")
     result = model.transcribe(audio_path)
-    # print(result["text"])
+    print(result["text"])
 
     # write to file, replace audio extension with .txt
     output_path = os.path.splitext(audio_path)[0] + ".txt"
