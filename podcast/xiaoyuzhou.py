@@ -105,15 +105,65 @@ def download_audio(url, output_path="downloaded_audio", cookies_file=None):
         except requests.exceptions.RequestException as e:
             print(f"Download failed: {file_name}. Error: {e}")
 
+        # transcribe
+        import whisper
+        model = whisper.load_model("large")
+        result = model.transcribe(file_path)
+        print(result["text"])
+
+        # write to file, replace audio extension with .txt
+        output_path = os.path.splitext(file_path)[0] + ".txt"
+        with open(output_path, "w") as f:
+            f.write(result["text"])
+
     return output_list
 
 
 @cli.command()
 @click.option("--audio_path", required=True, help="Path to the audio file")
 def transcribe(audio_path):
-    import whisper
-    model = whisper.load_model("large")
-    result = model.transcribe(audio_path)
+    # import whisper
+    # model = whisper.load_model("large")
+    # result = model.transcribe(audio_path)
+    # print(result["text"])
+
+    # # write to file, replace audio extension with .txt
+    # output_path = os.path.splitext(audio_path)[0] + ".txt"
+    # with open(output_path, "w") as f:
+    #     f.write(result["text"])
+
+    import torch
+    from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
+    from datasets import load_dataset
+
+
+    device = "cuda:0" if torch.cuda.is_available() else "cpu"
+    torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
+
+    model_id = "openai/whisper-large-v3"
+
+    model = AutoModelForSpeechSeq2Seq.from_pretrained(
+        model_id, torch_dtype=torch_dtype, low_cpu_mem_usage=True, use_safetensors=True,
+        # attn_implementation="flash_attention_2",
+    )
+    model.to(device)
+
+    processor = AutoProcessor.from_pretrained(model_id)
+
+    pipe = pipeline(
+        "automatic-speech-recognition",
+        model=model,
+        tokenizer=processor.tokenizer,
+        feature_extractor=processor.feature_extractor,
+        torch_dtype=torch_dtype,
+        device=device,
+    )
+
+    # dataset = load_dataset("distil-whisper/librispeech_long", "clean", split="validation")
+    # sample = dataset[0]["audio"]
+
+    # result = pipe(sample)
+    result = pipe(audio_path)
     print(result["text"])
 
     # write to file, replace audio extension with .txt
