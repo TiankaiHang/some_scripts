@@ -39,7 +39,7 @@ async def main():
     # Here you can add your code to use the client
     # For example:
     chat = client.start_chat()
-    response = await chat.send_message("翻译成中文 https://ai.meta.com/static-resource/movie-gen-research-paper")
+    response = await chat.send_message("hi")
     response1 = await chat.send_message("论文的详细网络结构")
     print(response.text)
     print(response1.text)
