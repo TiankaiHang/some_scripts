@@ -46,7 +46,7 @@ VENUE_CONFIG = [
         "search_terms_in_field": [r"European\s+Conference\s+on\s+Computer\s+Vision\b", r"\\bECCV\\b"],
         "expected_entry_type": "inproceedings",
         "expected_field_key_in_bib": "booktitle",
-        "recommended_field_value_string": "booktitle = {Proceedings of the European Conference on Computer Vision}",
+        "recommended_field_value_string": "booktitle = {European Conference on Computer Vision}",
         "description_for_issue": "ECCV会议论文"
     },
     {
@@ -120,6 +120,14 @@ VENUE_CONFIG = [
         "expected_field_key_in_bib": "booktitle",
         "recommended_field_value_string": "booktitle = {Medical Image Computing and Computer-Assisted Intervention}",
         "description_for_issue": "MICCAI会议论文"
+    },
+    {
+        "name": "CVIDL",
+        "search_terms_in_field": [r"Computer\s+Vision\s+Image\s+and\s+Deep\s+Learning\b", r"\bCVIDL\b"],
+        "expected_entry_type": "inproceedings",
+        "expected_field_key_in_bib": "booktitle",
+        "recommended_field_value_string": "booktitle = {International Conference on Computer Vision, Image and Deep Learning}",
+        "description_for_issue": "CVIDL会议论文"
     },
     # Journals
     {
